@@ -2,6 +2,7 @@ package com.ll.exam.app10.app.home.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -12,8 +13,8 @@ public class HomeController {
         return "home/main";
     }
 
-    @RequestMapping("/test/upload")
-    public String upload() {
+    @GetMapping("/test/upload")
+    public String uploadForm() {
         return "home/test/upload";
     }
 }
