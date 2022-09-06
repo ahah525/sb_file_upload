@@ -26,3 +26,5 @@ spring:
 custom:
   # 업로드 파일 저장 경로
   genFileDirPath: /Users/hanseung-yeon/temp/app10
+  # 업로드한 파일 웹서버에서 접근 요청 url
+  uploadPath: /gen/**
