@@ -1,0 +1,22 @@
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://thymeleaf.org"
+        layout:decorate="~{layout}"
+>
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/js/bootstrap.min.js"></script>
+
+<div class="container my-3">
+    <div class="my-3 border-bottom">
+        <div>
+            <h4>회원 프로필</h4>
+        </div>
+    </div>
+
+    <img th:src="@{|/gen/${member.profileImageUrl}|}" class="profile-image"/>
+    <span th:text="${member.username}"></span>
+</div>
+</html>
