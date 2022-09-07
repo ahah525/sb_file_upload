@@ -47,6 +47,8 @@ dependencies {
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	// query logging(바인딩된 쿼리 파라미터)
 	implementation "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0"
+	// validation 유효성 검증
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 tasks.named('test') {
