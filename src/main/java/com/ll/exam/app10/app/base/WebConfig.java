@@ -1,4 +1,4 @@
-package com.ll.exam.app10.app.base.entity;
+package com.ll.exam.app10.app.base;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

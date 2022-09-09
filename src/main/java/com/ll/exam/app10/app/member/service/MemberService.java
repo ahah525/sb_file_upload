@@ -32,25 +32,28 @@ public class MemberService implements UserDetailsService {
 
     public Long create(MemberCreateForm memberCreateForm) throws IOException {
         String bcryptPassword = passwordEncoder.encode(memberCreateForm.getPassword1());    // 암호화한 비밀번호
+        Member member;
+        String fileName = null;
+        // 1. 프로필 이미지 있는 경우
+        if(memberCreateForm.getProfileImage() != null) {
+            fileName = "member/" + randomUUID() + ".png";    // 랜덤한 파일명
+            String uploadPath = genFileDirPath + "/" + fileName;      // 로컬에 저장할 경로(기본 저장경로 + 파일명)
 
-        String fileName = "member/" + randomUUID() + ".png";    // 랜덤한 파일명
-        String uploadPath = genFileDirPath + "/" + fileName;      // 로컬에 저장할 경로(기본 저장경로 + 파일명)
+            File profileImageFile = new File(uploadPath);
+            MultipartFile profileImage = memberCreateForm.getProfileImage();
 
-        File profileImageFile = new File(uploadPath);
-        MultipartFile profileImage = memberCreateForm.getProfileImage();
+            profileImageFile.mkdirs();  // 업로드할 경로의 디렉토리가 존재하지 않으면 생성
 
-        profileImageFile.mkdirs();  // 업로드할 경로의 디렉토리가 존재하지 않으면 생성
-
-        // 프로필 이미지 파일 로컬 외부 경로에 저장
-        try {
-            profileImage.transferTo(profileImageFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalStateException e) {
-            throw new RuntimeException(e);
+            // 프로필 이미지 파일 로컬 외부 경로에 저장
+            try {
+                profileImage.transferTo(profileImageFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalStateException e) {
+                throw new RuntimeException(e);
+            }
         }
-
-        Member member = MemberCreateForm.toEntity(memberCreateForm, bcryptPassword, fileName);
+        member = MemberCreateForm.toEntity(memberCreateForm, bcryptPassword, fileName);
         Member saveMember = memberRepository.save(member);
 
         return saveMember.getId();
@@ -74,5 +77,9 @@ public class MemberService implements UserDetailsService {
 
         // User: security User 객체(loginId, password, 권한)
         return new User(member.getUsername(), member.getPassword(), authorities);
+    }
+
+    public long count() {
+        return memberRepository.count();
     }
 }
