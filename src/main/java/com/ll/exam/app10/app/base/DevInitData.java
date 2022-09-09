@@ -1,4 +1,4 @@
-package com.ll.exam.app10.app.base.entity;
+package com.ll.exam.app10.app.base;
 
 import com.ll.exam.app10.app.member.domain.MemberCreateForm;
 import com.ll.exam.app10.app.member.service.MemberService;
@@ -11,13 +11,13 @@ import java.io.IOException;
 import java.util.stream.IntStream;
 
 @Configuration
-@Profile("test")    // test 프로필로 지정
-public class TestInitData {
+@Profile("dev")    // dev 프로필로 지정(개발 모드)
+public class DevInitData {
     // CommandLineRunner : 주로 앱 실행 직후 초기 데이터 세팅, 초기화에 사용
     @Bean
     CommandLineRunner init(MemberService memberService) {
         return args -> {
-            IntStream.rangeClosed(1, 4).forEach(id -> {
+            IntStream.rangeClosed(1, 2).forEach(id -> {
                 MemberCreateForm memberCreateForm = MemberCreateForm.builder()
                         .username("user%d".formatted(id))
                         .email("user%d@test.com".formatted(id))
