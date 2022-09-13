@@ -8,17 +8,24 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -93,39 +100,71 @@ public class AppTest {
                 .andExpect(content().string(containsString("user2@test.com")));
     }
 
-//    @Test
-//    @DisplayName("회원가입")
-//    @Rollback(false)
-//    void t5() throws Exception {
-//        // 파일 다운로드
-//        String testUploadFileUrl = "https://picsum.photos/200/300";
-//        String fileName = "1";
-//        String originalFileName = "1.png";
-//        String contentType = "image/png";
-//
-//        String path = "/Users/hanseung-yeon/Desktop" + fileName + ".png";
-//        FileInputStream fileInputStream = new FileInputStream(path);
-//
-//        MockMultipartFile profileImage = new MockMultipartFile(
-//                fileName,
-//                originalFileName,
-//                contentType,
-//                fileInputStream
-//        );
-//
-//        // when(회원가입)
-//        ResultActions resultActions = mvc.perform(
-//                        multipart("/member/join")
-//                                .file(profileImage)
-//                                .param("username", "user1")
-//                                .param("password1", "1234")
-//                                .param("password2", "1234")
-//                                .param("email", "user1@test.com")
-//                                .characterEncoding("UTF-8"))
-//                .andDo(print());
-//
-//        // then(5번 회원 생성)
-//
-//
-//    }
+    @Test
+    @DisplayName("파일_다운로드하지않고_로컬파일을_form_전송한_방식으로_회원가입")
+    @Rollback(false)
+    void t5() throws Exception {
+        String name = "profileImage";           // form input name
+        String originalFileName = "1.png";      // 원래 파일명
+        String contentType = "image/png";       // 파일 형식
+
+        String path = "/Users/hanseung-yeon/Desktop/1.png";             // 파일 경로
+        FileInputStream fileInputStream = new FileInputStream(path);    // 파일 경로로 생성한 InputStream
+
+        MockMultipartFile profileImage = new MockMultipartFile(
+                name,
+                originalFileName,
+                contentType,
+                fileInputStream
+        );
+
+        // when(회원가입)
+        ResultActions resultActions = mvc.perform(
+                        multipart("/member/join")
+                                .file(profileImage)
+                                .param("username", "user3")
+                                .param("password1", "1234")
+                                .param("password2", "1234")
+                                .param("email", "user3@test.com")
+                                .characterEncoding("UTF-8"))
+                .andDo(print());
+
+        // then(5번 회원 생성)
+    }
+
+    @Test
+    @DisplayName("다운로드한_파일을_form_전송한_방식으로_회원가입")
+    @Rollback(false)
+    void t6() throws Exception {
+        String name = "profileImage";           // form input name
+        String originalFileName = "test.png";      // 원래 파일명
+        String contentType = "image/png";       // 파일 형식
+
+        String testUploadFileUrl = "https://picsum.photos/200/300";
+
+        // wget(파일 다운로드)
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Resource> response = restTemplate.getForEntity(testUploadFileUrl, Resource.class);
+        InputStream inputStream = response.getBody().getInputStream();
+
+        MockMultipartFile profileImage = new MockMultipartFile(
+                name,
+                originalFileName,
+                contentType,
+                inputStream
+        );
+
+        // when(회원가입)
+        ResultActions resultActions = mvc.perform(
+                        multipart("/member/join")
+                                .file(profileImage)
+                                .param("username", "user3")
+                                .param("password1", "1234")
+                                .param("password2", "1234")
+                                .param("email", "user3@test.com")
+                                .characterEncoding("UTF-8"))
+                .andDo(print());
+
+        // then(5번 회원 생성)
+    }
 }
