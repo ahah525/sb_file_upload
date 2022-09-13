@@ -92,4 +92,40 @@ public class AppTest {
                 .andExpect(handler().methodName("getProfile"))
                 .andExpect(content().string(containsString("user2@test.com")));
     }
+
+//    @Test
+//    @DisplayName("회원가입")
+//    @Rollback(false)
+//    void t5() throws Exception {
+//        // 파일 다운로드
+//        String testUploadFileUrl = "https://picsum.photos/200/300";
+//        String fileName = "1";
+//        String originalFileName = "1.png";
+//        String contentType = "image/png";
+//
+//        String path = "/Users/hanseung-yeon/Desktop" + fileName + ".png";
+//        FileInputStream fileInputStream = new FileInputStream(path);
+//
+//        MockMultipartFile profileImage = new MockMultipartFile(
+//                fileName,
+//                originalFileName,
+//                contentType,
+//                fileInputStream
+//        );
+//
+//        // when(회원가입)
+//        ResultActions resultActions = mvc.perform(
+//                        multipart("/member/join")
+//                                .file(profileImage)
+//                                .param("username", "user1")
+//                                .param("password1", "1234")
+//                                .param("password2", "1234")
+//                                .param("email", "user1@test.com")
+//                                .characterEncoding("UTF-8"))
+//                .andDo(print());
+//
+//        // then(5번 회원 생성)
+//
+//
+//    }
 }

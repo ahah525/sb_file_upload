@@ -14,14 +14,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()   // 개발용
-                .authorizeRequests()
-                .antMatchers("/**")
-                .permitAll()
-                .and()
-                .formLogin()
-                .loginPage("/member/login")
-                .loginProcessingUrl("/member/login");
+                .csrf(
+                        csrf -> csrf.disable()   // 개발용
+                )
+                .authorizeRequests(
+                        authorizeRequests -> authorizeRequests
+                                .antMatchers("/**")
+                                .permitAll()
+                )
+                .formLogin(
+                        formLogin -> formLogin
+                                .loginPage("/member/login")             // get
+                                .loginProcessingUrl("/member/login")    // post
+                );
         return http.build();
     }
 
