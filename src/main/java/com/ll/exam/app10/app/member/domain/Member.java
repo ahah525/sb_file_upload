@@ -23,4 +23,10 @@ public class Member extends BaseEntity {
     private String email;
 
     private String profileImageUrl; // 프로필 이미지 파일명
+
+    public String getProfileImageUrl() {
+        if(profileImageUrl == null) return null;
+
+        return "/gen/" + profileImageUrl;
+    }
 }
