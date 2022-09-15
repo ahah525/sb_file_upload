@@ -32,28 +32,31 @@ public class MemberService implements UserDetailsService {
 
     public Long create(MemberCreateForm memberCreateForm) throws IOException {
         String bcryptPassword = passwordEncoder.encode(memberCreateForm.getPassword1());    // 암호화한 비밀번호
+
+        String profileImgDirName = "member";    // 프로필 이미지 저장할 디렉토리
         Member member;
         String fileName = null;
         // 1. 프로필 이미지 있는 경우
-        if(memberCreateForm.getProfileImage() != null) {
-            fileName = "member/" + randomUUID() + ".png";    // 랜덤한 파일명
-            String uploadPath = genFileDirPath + "/" + fileName;      // 로컬에 저장할 경로(기본 저장경로 + 파일명)
+        if(memberCreateForm.getProfileImg() != null) {
+            fileName = randomUUID() + ".png";    // 랜덤한 파일명
+            String profileImgDirPath = genFileDirPath + "/" + profileImgDirName;      // 로컬 저장 디렉토리 경로(기본 경로 + 디렉토리)
+            String profileImgFilePath = profileImgDirPath + "/" + fileName;             // 로컬 저장 파일 경로
 
-            File profileImageFile = new File(uploadPath);
-            MultipartFile profileImage = memberCreateForm.getProfileImage();
-
-            profileImageFile.mkdirs();  // 업로드할 경로의 디렉토리가 존재하지 않으면 생성
+            new File(profileImgDirPath).mkdirs();   // 파일을 저장할 디렉토리 경로 생성
+            MultipartFile profileImg = memberCreateForm.getProfileImg();
 
             // 프로필 이미지 파일 로컬 외부 경로에 저장
             try {
-                profileImage.transferTo(profileImageFile);
+                profileImg.transferTo(new File(profileImgFilePath));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (IllegalStateException e) {
                 throw new RuntimeException(e);
             }
         }
-        member = MemberCreateForm.toEntity(memberCreateForm, bcryptPassword, fileName);
+
+        String profileImgRelPath = profileImgDirName + "/" + fileName;  // 상대 경로
+        member = MemberCreateForm.toEntity(memberCreateForm, bcryptPassword, profileImgRelPath);
         Member saveMember = memberRepository.save(member);
 
         return saveMember.getId();
@@ -81,5 +84,12 @@ public class MemberService implements UserDetailsService {
 
     public long count() {
         return memberRepository.count();
+    }
+
+    public void removeProfileImg(Member member) {
+        member.removeProfileImgOnStorage(); // 파일삭제
+        member.setProfileImg(null);
+
+        memberRepository.save(member);
     }
 }

@@ -13,14 +13,14 @@ public class MemberCreateForm {
     private String password1;
     private String password2;
     private String email;
-    private MultipartFile profileImage; // 프로필 이미지 파일
+    private MultipartFile profileImg; // 프로필 이미지 파일
 
-    public static Member toEntity(MemberCreateForm memberCreateForm, String bcryptPassword, String fileName) {
+    public static Member toEntity(MemberCreateForm memberCreateForm, String bcryptPassword, String profileImgRelPath) {
         return Member.builder()
                 .username(memberCreateForm.getUsername())
                 .password(bcryptPassword)
                 .email(memberCreateForm.getEmail())
-                .profileImageUrl(fileName)
+                .profileImg(profileImgRelPath)
                 .build();
     }
 }

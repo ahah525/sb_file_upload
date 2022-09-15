@@ -9,8 +9,8 @@
 <section layout:fragment="content">
 
     <div class="container">
-        <header th:if="${loginMember != null}">
-            user3 / <img th:src="@{${loginMemberProfileImgUrl}}" alt="">
+        <header th:if="${loginedMember != null}">
+            user3 / <img th:src="@{${loginedMemberProfileImgUrl}}" alt="">
         </header>
 
         <hr>

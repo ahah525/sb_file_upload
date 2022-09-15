@@ -17,18 +17,19 @@ public class HomeController {
 
     @RequestMapping("/")
     public String main(Model model, Principal principal) {
-        Member loginMember = null;
-        String loginMemberProfileImgUrl = null;
+        Member loginedMember = null;
+        String loginedMemberProfileImgUrl = null;
 
         if (principal != null && principal.getName() != null) {
-            loginMember = memberService.findByUsername(principal.getName());
-        }
-        if (loginMember != null) {
-            loginMemberProfileImgUrl = loginMember.getProfileImageUrl();
+            loginedMember = memberService.findByUsername(principal.getName());
         }
 
-        model.addAttribute("loginMember", loginMember);
-        model.addAttribute("loginMemberProfileImgUrl", loginMemberProfileImgUrl);
+        if (loginedMember != null) {
+            loginedMemberProfileImgUrl = loginedMember.getProfileImgUrl();
+        }
+
+        model.addAttribute("loginedMember", loginedMember);
+        model.addAttribute("loginedMemberProfileImgUrl", loginedMemberProfileImgUrl);
 
         return "home/main";
     }

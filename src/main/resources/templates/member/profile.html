@@ -19,9 +19,9 @@
             }
         </style>
 
-        <img class="profile-img" th:src="@{${loginMember.profileImageUrl}}">
-        <div>아이디 : <span th:text="${loginMember.username}"></span></div>
-        <div>이메일 : <span th:text="${loginMember.email}"></span></div>
+        <img class="profile-img" th:src="@{|/gen/${loginedMember.profileImg}|}">
+        <div>아이디 : <span th:text="${loginedMember.username}"></span></div>
+        <div>이메일 : <span th:text="${loginedMember.email}"></span></div>
     </div>
 
 </section>
