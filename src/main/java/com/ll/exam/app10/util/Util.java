@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public class Util {
     public static class date {
-
+        // 현재 일자 조회
         public static String getCurrentDateFormatted(String pattern) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             return simpleDateFormat.format(new Date());

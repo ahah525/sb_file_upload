@@ -3,6 +3,7 @@ package com.ll.exam.app10.app.member.service;
 import com.ll.exam.app10.app.member.domain.Member;
 import com.ll.exam.app10.app.member.domain.MemberCreateForm;
 import com.ll.exam.app10.app.member.repository.MemberRepository;
+import com.ll.exam.app10.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,17 +34,18 @@ public class MemberService implements UserDetailsService {
     public Long create(MemberCreateForm memberCreateForm) throws IOException {
         String bcryptPassword = passwordEncoder.encode(memberCreateForm.getPassword1());    // 암호화한 비밀번호
 
-        String profileImgDirName = "member";    // 프로필 이미지 저장할 디렉토리
-        Member member;
+        MultipartFile profileImg = memberCreateForm.getProfileImg();    // 프로필 이미지 파일
+        String profileImgDirName = "member/" + Util.date.getCurrentDateFormatted("yyyy_MM_dd");   // 프로필 이미지 저장할 디렉토리
         String fileName = null;
+
         // 1. 프로필 이미지 있는 경우
-        if(memberCreateForm.getProfileImg() != null) {
-            fileName = randomUUID() + ".png";    // 랜덤한 파일명
+        if(profileImg != null) {
+            String ext = Util.file.getExt(profileImg.getOriginalFilename());    // 확장자 추출
+            fileName = randomUUID() + "." + ext;    // 랜덤한 파일명
             String profileImgDirPath = genFileDirPath + "/" + profileImgDirName;      // 로컬 저장 디렉토리 경로(기본 경로 + 디렉토리)
             String profileImgFilePath = profileImgDirPath + "/" + fileName;             // 로컬 저장 파일 경로
 
             new File(profileImgDirPath).mkdirs();   // 파일을 저장할 디렉토리 경로 생성
-            MultipartFile profileImg = memberCreateForm.getProfileImg();
 
             // 프로필 이미지 파일 로컬 외부 경로에 저장
             try {
@@ -56,7 +58,7 @@ public class MemberService implements UserDetailsService {
         }
 
         String profileImgRelPath = profileImgDirName + "/" + fileName;  // 상대 경로
-        member = MemberCreateForm.toEntity(memberCreateForm, bcryptPassword, profileImgRelPath);
+        Member member = MemberCreateForm.toEntity(memberCreateForm, bcryptPassword, profileImgRelPath);
         Member saveMember = memberRepository.save(member);
 
         return saveMember.getId();
