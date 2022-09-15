@@ -23,12 +23,14 @@ public class MemberController {
     private final MemberService memberService;
 
     // 회원가입 폼
+    @PreAuthorize("isAnonymous()")
     @GetMapping("/join")
     public String joinForm(MemberCreateForm memberCreateForm) {
         return "member/signup_form";
     }
 
     // 회원가입과 동시에 로그인 처리
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
     public String join(HttpServletRequest req, MemberCreateForm memberCreateForm) throws IOException {
         Member member = memberService.findByUsername(memberCreateForm.getUsername());
@@ -60,6 +62,7 @@ public class MemberController {
     }
 
     // 로그인폼
+    @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
     public String loginForm() {
         return "member/login_form";
