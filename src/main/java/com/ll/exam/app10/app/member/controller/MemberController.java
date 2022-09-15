@@ -53,8 +53,8 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
     public String getProfile(Principal principal, Model model) {
-        Member member = memberService.findByUsername(principal.getName());
-        model.addAttribute("member", member);
+        Member loginMember = memberService.findByUsername(principal.getName());
+        model.addAttribute("loginMember", loginMember);
 
         return "member/profile";
     }

@@ -1,48 +1,55 @@
-<html
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        xmlns:th="http://thymeleaf.org"
-        layout:decorate="~{layout}"
->
+<!DOCTYPE html>
+<html layout:decorate="~{layout/layout.html}">
 
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="/style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/js/bootstrap.min.js"></script>
+<head>
+    <title>로그인</title>
+</head>
 
-<script>
-    function LoginForm__submit(form) {
-        form.username.value = form.username.value.trim();
+<body>
+<section layout:fragment="content">
+    <div class="container">
+        <h1>로그인</h1>
 
-        if (form.username.value.length == 0) {
-            alert("아이디를 입력해주세요.");
-            form.username.focus();
-            return;
-        }
+        <script>
+            function LoginForm__submit(form) {
+                form.username.value = form.username.value.trim();
 
-        form.password.value = form.password.value.trim();
+                if (form.username.value.length == 0) {
+                    alert("아이디를 입력해주세요.");
+                    form.username.focus();
+                    return;
+                }
 
-        if (form.password.value.length == 0) {
-            alert("비밀번호를 입력해주세요.");
-            form.password.focus();
-            return;
-        }
+                form.password.value = form.password.value.trim();
 
-        form.submit();
-    }
+                if (form.password.value.length == 0) {
+                    alert("비밀번호를 입력해주세요.");
+                    form.password.focus();
+                    return;
+                }
 
-</script>
+                form.submit();
+            }
 
-<div class="container my-3">
-    <form th:action="@{/member/login}" method="post" onsubmit="LoginForm__submit(this); return false;">
-        <div class="mb-3">
-            <label for="username" class="form-label">사용자ID</label>
-            <input type="text" name="username" id="username" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" name="password" id="password" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">로그인</button>
-    </form>
-</div>
+        </script>
+
+
+        <form th:action method="POST" onsubmit="LoginForm__submit(this); return false;">
+            <div>
+                <span>아이디</span>
+                <input type="text" name="username">
+            </div>
+            <div>
+                <span>비밀번호</span>
+                <input type="password" name="password">
+            </div>
+            <div>
+                <span>로그인</span>
+                <input type="submit" value="로그인">
+            </div>
+        </form>
+    </div>
+
+</section>
+</body>
 </html>

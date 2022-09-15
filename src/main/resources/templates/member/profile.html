@@ -1,23 +1,29 @@
-<html
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        xmlns:th="http://thymeleaf.org"
-        layout:decorate="~{layout}"
->
+<!DOCTYPE html>
+<html layout:decorate="~{layout/layout.html}">
 
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="/style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/js/bootstrap.min.js"></script>
+<head>
+    <title>프로파일</title>
+</head>
 
-<div class="container my-3">
-    <div class="my-3 border-bottom">
-        <div>
-            <h4>회원 프로필</h4>
-        </div>
+<body>
+<section layout:fragment="content">
+    <div class="container">
+        <h1>프로파일</h1>
+
+        <style>
+            .profile-img {
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+                border-radius: 10px;
+            }
+        </style>
+
+        <img class="profile-img" th:src="@{${loginMember.profileImageUrl}}">
+        <div>아이디 : <span th:text="${loginMember.username}"></span></div>
+        <div>이메일 : <span th:text="${loginMember.email}"></span></div>
     </div>
 
-    <img th:src="@{${member.profileImageUrl}}" class="profile-image"/>
-    <span th:text="${member.username}"></span>
-    <div th:text="${member.email}"></div>
-</div>
+</section>
+</body>
 </html>
