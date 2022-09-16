@@ -1,6 +1,5 @@
 package com.ll.exam.app10.app.home.controller;
 
-import com.ll.exam.app10.app.member.domain.Member;
 import com.ll.exam.app10.app.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -16,39 +15,11 @@ public class HomeController {
 
     @GetMapping("/")
     public String showMain(Model model, Principal principal) {
-        Member loginedMember = null;
-        String loginedMemberProfileImgUrl = null;
-
-        if (principal != null && principal.getName() != null) {
-            loginedMember = memberService.findByUsername(principal.getName());
-        }
-
-        if (loginedMember != null) {
-            loginedMemberProfileImgUrl = loginedMember.getProfileImgUrl();
-        }
-
-        model.addAttribute("loginedMember", loginedMember);
-        model.addAttribute("loginedMemberProfileImgUrl", loginedMemberProfileImgUrl);
-
         return "home/main";
     }
 
     @GetMapping("/about")
     public String showAbout(Principal principal, Model model) {
-        Member loginedMember = null;
-        String loginedMemberProfileImgUrl = null;
-
-        if (principal != null && principal.getName() != null) {
-            loginedMember = memberService.findByUsername(principal.getName());
-        }
-
-        if (loginedMember != null) {
-            loginedMemberProfileImgUrl = loginedMember.getProfileImgUrl();
-        }
-
-        model.addAttribute("loginedMember", loginedMember);
-        model.addAttribute("loginedMemberProfileImgUrl", loginedMemberProfileImgUrl);
-
         return "home/about";
     }
 }
