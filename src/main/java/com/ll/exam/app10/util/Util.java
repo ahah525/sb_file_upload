@@ -1,5 +1,12 @@
 package com.ll.exam.app10.util;
 
+import org.apache.tika.Tika;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
@@ -20,6 +27,36 @@ public class Util {
                     .filter(f -> f.contains("."))
                     .map(f -> f.substring(filename.lastIndexOf(".") + 1))
                     .orElse("");
+        }
+
+        // 파일 확장자 변경 처리
+        public static String downloadImg(String url, String filePath) {
+            // filePath = /Users/hanseung-yeon/temp/app10/member/2022_09_15/123.png
+            // ParentFile = /Users/hanseung-yeon/temp/app10/member/2022_09_15
+            new File(filePath).getParentFile().mkdirs();
+
+            byte[] imageBytes = new RestTemplate().getForObject(url, byte[].class);
+            try {
+                Files.write(Paths.get(filePath), imageBytes);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            String mimeType = null;
+            try {
+                // Tika 라이브러리 파일 확장자 알려줌
+                mimeType = new Tika().detect(new File(filePath));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            String ext = mimeType.replaceAll("image/", "");
+            ext = ext.replaceAll("jpeg", "jpg");
+
+            String newFilePath = filePath + "." + ext;
+
+            new File(filePath).renameTo(new File(newFilePath));
+
+            return newFilePath;
         }
     }
 }

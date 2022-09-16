@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
 
@@ -31,11 +32,17 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // 프로필 이미지 저장할 디렉토리
+    private String getCurrentProfileImgDirName() {
+        return "member/" + Util.date.getCurrentDateFormatted("yyyy_MM_dd");
+    }
+
     public Long create(MemberCreateForm memberCreateForm) throws IOException {
+         // TODO : 리팩토링
         String bcryptPassword = passwordEncoder.encode(memberCreateForm.getPassword1());    // 암호화한 비밀번호
 
         MultipartFile profileImg = memberCreateForm.getProfileImg();    // 프로필 이미지 파일
-        String profileImgDirName = "member/" + Util.date.getCurrentDateFormatted("yyyy_MM_dd");   // 프로필 이미지 저장할 디렉토리
+        String profileImgDirName = getCurrentProfileImgDirName();
         String fileName = null;
 
         // 1. 프로필 이미지 있는 경우
@@ -59,6 +66,11 @@ public class MemberService implements UserDetailsService {
 
         String profileImgRelPath = profileImgDirName + "/" + fileName;  // 상대 경로
         Member member = MemberCreateForm.toEntity(memberCreateForm, bcryptPassword, profileImgRelPath);
+        // 2. 프로필 이미지 없으면 기본 이미지 세팅
+        if(profileImg == null) {
+            setProfileImgByUrl(member, "https://picsum.photos/200/300");
+        }
+        // 회원 저장
         Member saveMember = memberRepository.save(member);
 
         return saveMember.getId();
@@ -93,5 +105,10 @@ public class MemberService implements UserDetailsService {
         member.setProfileImg(null);
 
         memberRepository.save(member);
+    }
+
+    public void setProfileImgByUrl(Member member, String url) {
+        String filePath = Util.file.downloadImg(url, genFileDirPath + "/" + getCurrentProfileImgDirName() + "/" + UUID.randomUUID());
+        member.setProfileImg(getCurrentProfileImgDirName() + "/" + new File(filePath).getName());
     }
 }

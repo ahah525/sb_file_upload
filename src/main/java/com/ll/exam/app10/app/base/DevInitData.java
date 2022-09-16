@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 public class DevInitData {
     // CommandLineRunner : 주로 앱 실행 직후 초기 데이터 세팅, 초기화에 사용
     @Bean
-    CommandLineRunner init(MemberService memberService) {
+    CommandLineRunner init(MemberService memberService) throws IOException {
         return args -> {
             IntStream.rangeClosed(1, 2).forEach(id -> {
                 MemberCreateForm memberCreateForm = MemberCreateForm.builder()
