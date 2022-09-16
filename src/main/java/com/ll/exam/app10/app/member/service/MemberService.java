@@ -6,27 +6,19 @@ import com.ll.exam.app10.app.member.repository.MemberRepository;
 import com.ll.exam.app10.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService implements UserDetailsService {
+public class MemberService {
     @Value("${custom.genFileDirPath}")
     private String genFileDirPath;      // 기본 저장 경로
     private final MemberRepository memberRepository;
@@ -85,16 +77,7 @@ public class MemberService implements UserDetailsService {
     }
 
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberRepository.findByUsername(username).orElse(null);
 
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("member"));  // 생략해도됨
-
-        // User: security User 객체(loginId, password, 권한)
-        return new User(member.getUsername(), member.getPassword(), authorities);
-    }
 
     public long count() {
         return memberRepository.count();

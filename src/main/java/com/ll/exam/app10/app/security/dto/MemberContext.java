@@ -1,0 +1,21 @@
+package com.ll.exam.app10.app.security.dto;
+
+import com.ll.exam.app10.app.member.domain.Member;
+import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+
+import java.util.Collection;
+
+@Getter
+public class MemberContext extends User {
+    private final Long id;
+    private final String profileImgUrl;
+
+    public MemberContext(Member member, Collection<? extends GrantedAuthority> authorities) {
+        // User 객체 생성자
+        super(member.getUsername(), member.getPassword(), authorities);
+        this.id = member.getId();
+        this.profileImgUrl = member.getProfileImgUrl();
+    }
+}
