@@ -53,6 +53,8 @@ dependencies {
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 	// 파일 메타데이터(확장자) 추출
 	implementation 'org.apache.tika:tika-core:2.4.1'
+	// 소셜 로그인
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 
 tasks.named('test') {
