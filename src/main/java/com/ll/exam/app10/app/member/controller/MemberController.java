@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -54,6 +55,12 @@ public class MemberController {
     @GetMapping("/profile")
     public String getProfile() {
         return "member/profile";
+    }
+
+    // 회원 이미지 조회
+    @GetMapping("/profile/img/{id}")
+    public String showProfileImg(@PathVariable Long id) {
+        return "redirect:" + memberService.findById(id).getProfileImgUrl();
     }
 
     // 로그인폼
