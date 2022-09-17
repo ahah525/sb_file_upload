@@ -35,6 +35,13 @@ public class MemberController {
         return "member/signup_form";
     }
 
+    // 로그인폼
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/login")
+    public String loginForm() {
+        return "member/login_form";
+    }
+
     // 회원가입과 동시에 로그인 처리
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
@@ -76,12 +83,5 @@ public class MemberController {
         httpHeaders.setCacheControl(CacheControl.maxAge(60 * 60 * 1, TimeUnit.SECONDS));
 
         return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);
-    }
-
-    // 로그인폼
-    @PreAuthorize("isAnonymous()")
-    @GetMapping("/login")
-    public String loginForm() {
-        return "member/login_form";
     }
 }
