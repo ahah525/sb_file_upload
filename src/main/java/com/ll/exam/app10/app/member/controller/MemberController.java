@@ -4,6 +4,10 @@ import com.ll.exam.app10.app.member.domain.Member;
 import com.ll.exam.app10.app.member.domain.MemberCreateForm;
 import com.ll.exam.app10.app.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequestMapping("/member")
@@ -59,8 +66,16 @@ public class MemberController {
 
     // 회원 이미지 조회
     @GetMapping("/profile/img/{id}")
-    public String showProfileImg(@PathVariable Long id) {
-        return "redirect:" + memberService.findById(id).getProfileImgUrl();
+    public ResponseEntity<Object> showProfileImg(@PathVariable Long id) throws URISyntaxException {
+//        return "redirect:" + memberService.findById(id).getProfileImgUrl();
+        // 302 cache 붙이기(검색해서 사용)
+        URI redirectUri = new URI(memberService.findById(id).getProfileImgUrl());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(redirectUri);
+        // 1시간 마다 새로 요청
+        httpHeaders.setCacheControl(CacheControl.maxAge(60 * 60 * 1, TimeUnit.SECONDS));
+
+        return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);
     }
 
     // 로그인폼
