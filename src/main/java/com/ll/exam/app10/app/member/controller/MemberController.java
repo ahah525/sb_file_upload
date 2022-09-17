@@ -3,8 +3,10 @@ package com.ll.exam.app10.app.member.controller;
 import com.ll.exam.app10.app.member.domain.Member;
 import com.ll.exam.app10.app.member.domain.MemberCreateForm;
 import com.ll.exam.app10.app.member.service.MemberService;
+import com.ll.exam.app10.app.security.dto.MemberContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.security.Principal;
 
 @Controller
 @RequestMapping("/member")
@@ -54,9 +55,8 @@ public class MemberController {
     // 회원 정보 조회
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
-    public String getProfile(Principal principal, Model model) {
-        Member loginedMember = memberService.findByUsername(principal.getName());
-        model.addAttribute("loginedMember", loginedMember);
+    public String getProfile(@AuthenticationPrincipal MemberContext memberContext, Model model) {
+        model.addAttribute("memberContext", memberContext);
 
         return "member/profile";
     }
